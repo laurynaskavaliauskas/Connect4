@@ -49,16 +49,15 @@ describe Game do
     end
 
     it "doesn't accept invalid columns" do
-      expect{@game.play(0)}.to raise_error ArgumentError
-      expect{@game.play(8)}.to raise_error ArgumentError
+      expect{@game.play(-1)}.to raise_error ArgumentError
+      expect{@game.play(7)}.to raise_error ArgumentError
     end
 
     context "with an invalid column" do
       before :each do
         begin
-          @game.play(0)
-        rescue Exception => e
-          
+          @game.play(7)
+        rescue   
         end        
       end
 
@@ -83,7 +82,15 @@ describe Game do
 
       it "set player 2 as current player" do
         @game.current_player.should == 2
-      end      
+      end     
+
+      it "sets turn to 2" do
+        @game.current_turn.should == 2
+      end
+
+      it "fills the correct slot" do
+        @game.slot(0, 0).should == 1
+      end
 
       it "after Player 2 plays asks Player 1 for next move" do
         expect_output_message("Player 1: select column")
@@ -97,7 +104,11 @@ describe Game do
 
         it "set player 1 as current player" do
           @game.current_player.should == 1
-        end        
+        end      
+
+        it "sets turn to 3" do
+          @game.current_turn.should == 3
+        end    
       end
     end
   end

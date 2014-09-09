@@ -17,15 +17,16 @@ class Game
     raise_if_invalid_column(column)
 
     change_player
+    @current_turn+=1;
     put_prompt
   end
 
 private
 
   def raise_if_invalid_column(column)
-    if column <= 0 || column >= 8
-        raise ArgumentError
-      end
+    if column < 0 || column > 6
+      raise ArgumentError
+    end
   end
 
   def change_player
