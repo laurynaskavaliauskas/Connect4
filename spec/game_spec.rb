@@ -3,7 +3,7 @@ require "spec_helper"
 describe Game do
 
   before :each do 
-    @output = ConsolePrinter.get_output.as_null_object
+    @output = ConsolePrinter.new(Output.new).as_null_object
     @game = Game.new(@output)
   end
 
