@@ -11,6 +11,11 @@ describe Game do
     @output.should_receive(:put_message).with(message)
   end
 
+  def player1_wins
+    (0..2).each{|col| 2.times { @game.play(col) }}
+    @game.play(3)
+  end
+
   describe "#new" do 
     context "with an output" do
       it "creates a new game instance" do 
@@ -40,6 +45,10 @@ describe Game do
 
     it "sets current turn to 1" do
       @game.current_turn.should == 1
+    end
+
+    it "initializes the slots to 0" do
+      (0..5).each{|row| (0..6).each{|col| @game.slot(row, col).should == 0}}
     end
   end
 
@@ -89,7 +98,7 @@ describe Game do
       end
 
       it "fills the correct slot" do
-        @game.slot(0, 0).should == 1
+        @game.slot(0, 1).should == 1
       end
 
       it "after Player 2 plays asks Player 1 for next move" do
@@ -109,7 +118,28 @@ describe Game do
         it "sets turn to 3" do
           @game.current_turn.should == 3
         end    
+
+        it "fills the correct slot" do
+          @game.slot(0, 1).should == 1
+          @game.slot(1, 1).should == 2
+        end
       end
     end
+
+    it "raises an error when the column is full" do
+      6.times{@game.play(1)}
+      expect{@game.play(1)}.to raise_error ArgumentError
+    end
+
+    it "raises an error if game has ended" do
+      player1_wins
+      expect{@game.play(1)}.to raise_error
+    end
+  end
+
+  it "ends when a player wins" do
+    @game.start
+    expect_output_message("Player 1 wins")
+    player1_wins
   end
 end
