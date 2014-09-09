@@ -3,4 +3,15 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'connect4'
-#game = Connect4::Game.new(STDOUT)
+game = Game.new(ConsolePrinter.new(STDOUT))
+game.start
+
+loop do
+  i = gets.chomp
+
+  if i.empty?
+    exit
+  end
+
+  game.play(i.to_i)
+end

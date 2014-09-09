@@ -137,9 +137,16 @@ describe Game do
     end
   end
 
-  it "ends when a player wins" do
+  it "ends when a player wins horizontally" do
     @game.start
     expect_output_message("Player 1 wins")
     player1_wins
+  end
+
+  it "ends when a player wins vertically" do
+    @game.start
+    expect_output_message("Player 1 wins")
+    3.times{(0..1).each { |col| @game.play(col) }}
+    @game.play(0)
   end
 end

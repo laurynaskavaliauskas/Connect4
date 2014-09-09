@@ -13,22 +13,22 @@ describe ConsolePrinter do
   end
 
   it "put player 1 disc" do
-    @out.should_receive(:puts)
+    @out.should_receive(:print)
     @output.put_player1_disc
   end
 
   it "put player 2 disc" do
-    @out.should_receive(:puts)
+    @out.should_receive(:print)
     @output.put_player2_disc
   end
 
   it "puts a horizontal separator" do
-    @out.should_receive(:puts)
+    @out.should_receive(:print)
     @output.put_horizontal_separator
   end
 
   it "puts a vertical separator" do
-    @out.should_receive(:puts)
+    @out.should_receive(:print)
     @output.put_vertical_separator
   end
 

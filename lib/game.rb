@@ -12,8 +12,14 @@ class Game
   end
   
   def start
+    system "clear"
+
     @game_running = true
     @output.put_message("Game started")
+    @output.put_message(" 0 1 2 3 4 5 6 ")
+
+    draw_board
+    
     put_prompt
   end
 
@@ -24,12 +30,15 @@ class Game
 
     update_column(column)
 
-    if @current_turn >= 7
-      if is_horizontal_win?
-        @output.put_message("Player #{@current_player} wins")
-        @game_running = false
-        return
-      end
+    system "clear"
+
+    @output.put_message(" 0 1 2 3 4 5 6 ")
+    draw_board
+
+    if is_win?
+      @output.put_message("Player #{@current_player} wins")
+      @game_running = false
+      return
     end    
 
     change_player
@@ -43,10 +52,67 @@ class Game
 
 private
 
+  def draw_board
+    for row in 5.step(0, -1) do
+      for col in (0..6) do
+        @output.put_vertical_separator
+
+        if @board[row][col] == 1
+          @output.put_player1_disc
+        elsif @board[row][col] == 2
+          @output.put_player2_disc
+        else
+          @output.put_empty_space
+        end
+      end
+
+      @output.put_vertical_separator
+      @output.put_message("")
+    end
+  end
+
+  def is_win?
+    if @current_turn >= 7
+      if is_horizontal_win? || is_vertical_win?
+        return true
+      end
+    end
+
+    return false
+  end
+
   def is_horizontal_win?
-    (0..@columns_heights.max).each do |row|
+    (0..@columns_heights.max - 1).each do |row|
       win = 0
       (0..6).each do |col| 
+        slot(row, col) == @current_player ? win += 1 : win = 0
+        if win == 4          
+          return true
+        end
+      end
+    end  
+
+    false  
+  end
+
+  def is_vertical_win?
+    (0..6).each do |col|
+      win = 0
+      (0..5).each do |row| 
+        slot(row, col) == @current_player ? win += 1 : win = 0
+        if win == 4          
+          return true
+        end
+      end
+    end  
+
+    false  
+  end
+
+  def is_oblique_win?
+    (0..2).each do |col|
+      win = 0
+      (0..3).each do |row| 
         slot(row, col) == @current_player ? win += 1 : win = 0
         if win == 4          
           return true
