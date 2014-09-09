@@ -1,2 +1,2 @@
-require 'output'
+require 'console_printer'
 require 'game'

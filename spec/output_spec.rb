@@ -1,13 +1,13 @@
 require "spec_helper"
 
-describe Output do
+describe ConsolePrinter do
   before :each do
-    @output = Output.get_output
+    @output = ConsolePrinter.get_output
   end
 
   describe ".get_output" do 
-    it "return a new Output instance" do 
-      @output.should be_a Output
+    it "return a new ConsolePrinter instance" do 
+      @output.should be_a ConsolePrinter
     end
   end
 

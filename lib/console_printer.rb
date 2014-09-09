@@ -1,9 +1,9 @@
 require "colorize"
 
-class Output
+class ConsolePrinter
   @@output = nil;
   def self.get_output
-    @@output || Output.new
+    @@output || ConsolePrinter.new
   end
 
   def put_player1_disc
