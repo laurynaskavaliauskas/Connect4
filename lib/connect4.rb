@@ -1,1 +1,2 @@
+require 'output'
 require 'game'
