@@ -1,10 +1,10 @@
 require "spec_helper"
 
 describe Game do
-
+  #we want initiate this class before each test 
   before :each do 
     @output = ConsolePrinter.new(Output.new).as_null_object
-    @game = Game.new(@output)
+    @game = Game.new(6, 7, 4, @output)
   end
 
   def expect_output_message(message)
@@ -16,12 +16,13 @@ describe Game do
     @game.play(3)
   end
 
-  describe "#new" do 
+  describe "#new" do
+    #confim that we’ve indeed made a Game object
     context "with an output" do
       it "creates a new game instance" do 
         @game.should be_a Game
       end
-
+      #confirm 1st player has been set as starting
       it "set player 1 as starting player" do
         @game.current_player.should == 1
       end
@@ -29,24 +30,7 @@ describe Game do
   end
 
   describe "#start" do 
-    it "shows a start message to the user" do
-      expect_output_message("Game started")
-      @game.start
-    end
-
-    it "prompts player 1 to make the first move" do
-      expect_output_message("Player 1: select column")
-      @game.start
-    end
-
-    it "set player 1 as starting player" do
-      @game.current_player.should == 1
-    end
-
-    it "sets current turn to 1" do
-      @game.current_turn.should == 1
-    end
-
+    #check our Board array has been indeed zeroed
     it "initializes the slots to 0" do
       (0..5).each{|row| (0..6).each{|col| @game.slot(row, col).should == 0}}
     end
@@ -56,97 +40,27 @@ describe Game do
     before :each do 
       @game.start
     end
-
-    it "doesn't accept invalid columns" do
-      expect{@game.play(-1)}.to raise_error ArgumentError
-      expect{@game.play(7)}.to raise_error ArgumentError
-    end
-
-    context "with an invalid column" do
-      before :each do
-        begin
-          @game.play(7)
-        rescue   
-        end        
-      end
-
-      it "doesn't change player" do
-        @game.current_player.should == 1
-      end
-
-      it "doesn't change turn" do
-        @game.current_turn.should == 1
-      end
-    end    
-
-    it "after Player 1 plays asks Player 2 for next move" do
-      expect_output_message("Player 2: select column")
-      @game.play(1)
-    end
-
-    context "Player 1 makes the first move" do
-      before :each do 
-        @game.play(1)
-      end
-
-      it "set player 2 as current player" do
-        @game.current_player.should == 2
-      end     
-
-      it "sets turn to 2" do
-        @game.current_turn.should == 2
-      end
-
-      it "fills the correct slot" do
-        @game.slot(0, 1).should == 1
-      end
-
-      it "after Player 2 plays asks Player 1 for next move" do
-        expect_output_message("Player 1: select column")
-        @game.play(1)
-      end
-
-      context "Player 2 makes the second move" do
-        before :each do 
-          @game.play(1)
-        end
-
-        it "set player 1 as current player" do
-          @game.current_player.should == 1
-        end      
-
-        it "sets turn to 3" do
-          @game.current_turn.should == 3
-        end    
-
-        it "fills the correct slot" do
-          @game.slot(0, 1).should == 1
-          @game.slot(1, 1).should == 2
-        end
-      end
-    end
-
+    # validates error handling
     it "raises an error when the column is full" do
       6.times{@game.play(1)}
       expect{@game.play(1)}.to raise_error ArgumentError
     end
-
-    it "raises an error if game has ended" do
-      player1_wins
-      expect{@game.play(1)}.to raise_error
-    end
   end
 
+  #test gameplay, horizontal line
   it "ends when a player wins horizontally" do
     @game.start
     expect_output_message("Player 1 wins")
     player1_wins
   end
 
-  it "ends when a player wins vertically" do
+  #test gameplay, diagonal line
+  it "ends when a player wins diagonally" do
     @game.start
     expect_output_message("Player 1 wins")
-    3.times{(0..1).each { |col| @game.play(col) }}
-    @game.play(0)
+    (0..1).each { |col| @game.play(col) }
+    (1..2).each { |col| @game.play(col) }
+    2.times{(2..3).each { |col| @game.play(col) }}
+    [3,5,3].each { |col| @game.play(col) }
   end
 end
